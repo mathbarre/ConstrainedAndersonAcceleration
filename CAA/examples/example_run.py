@@ -47,7 +47,8 @@ if is_sparse:
 else:
     L = norm(X, ord=2) ** 2 / 4
 solver_logreg(
-        X, y, rho=1e-12, C0=10, adaptive_C=True, use_acc=True, max_iter=100, f_grad=fgap, K=5)
+        X, y, rho=1e-12, C0=10, adaptive_C=True, use_acc=True,
+        max_iter=100, f_grad=fgap, K=5)
 
 conditioning = 1e-8
 
@@ -60,31 +61,26 @@ for algo in all_algos:
     start_time = time.time()
     # _, E, gaps = solver_enet(
     #     X, y, 1/C, rho=0.01, verbose=verbose,
-    #     tol=tol, algo=algo_name, use_acc=use_acc, max_iter=max_iter, f_gap=fgap)
+    #     tol=tol, algo=algo_name, use_acc=use_acc,
+    #     max_iter=max_iter, f_gap=fgap)
     w, E, T = solver_logreg(
         X, y, rho=conditioning*L, verbose=verbose,
-        tol=tol, C0=C, adaptive_C=True, use_acc=use_acc, max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg)
+        tol=tol, C0=C, adaptive_C=True, use_acc=use_acc,
+        max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg)
     print("%s --- %s seconds ---" % (algo_name, time.time() - start_time))
     all_Es[algo] = E
     all_Ts[algo] = T
 
 
-
-
 res = np.array([])
 for algo in all_algos:
-    res = np.hstack([res,all_Es[algo]])
+    res = np.hstack([res, all_Es[algo]])
 
-res = res.reshape((len(all_algos),-1))
+res = res.reshape((len(all_algos), -1))
 for algo in all_algos:
     res = np.vstack([res, all_Ts[algo]])
-res = np.vstack([res,fgap * np.arange(res.shape[1])])
+res = np.vstack([res, fgap * np.arange(res.shape[1])])
 
 
 name = "./CAA/examples/results/logreg_%s_C0_%i_rho_%e.txt" % (dataset, C0, conditioning)
 np.savetxt(name, res.T)
-# %%
-# Import packages.
-
-
-# %%
