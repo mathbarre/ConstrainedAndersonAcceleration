@@ -49,7 +49,7 @@ else:
 solver_logreg(
         X, y, rho=1e-12, C0=10, adaptive_C=True, use_acc=True, max_iter=100, f_grad=fgap, K=5)
 
-conditioning = 1e-7
+conditioning = 1e-8
 
 for algo in all_algos:
     algo_name = algo[0]
@@ -81,7 +81,7 @@ for algo in all_algos:
 res = np.vstack([res,fgap * np.arange(res.shape[1])])
 
 
-name = "./CAA/examples/results/logreg_%s_C0_%i_rho_%f.txt" % (dataset, C0, conditioning)
+name = "./CAA/examples/results/logreg_%s_C0_%i_rho_%e.txt" % (dataset, C0, conditioning)
 np.savetxt(name, res.T)
 # %%
 # Import packages.
