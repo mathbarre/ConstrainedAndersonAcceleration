@@ -27,7 +27,7 @@ for dataset in datasets:
     else:
         L = norm(X, ord=2) ** 2 / 4
     for conditioning in conditionings:
-
+        print(conditioning)
         tol = 1e-10
         C0 = 10
         all_algos = [
