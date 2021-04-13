@@ -16,7 +16,8 @@ from CAA.utils.utils import power_method
 # X, y = fetch_libsvm("liver-disorders", normalize=False) # good
 # X, y = fetch_libsvm("phishing", normalize=False) # good
 
-datasets = ["leukemia", "leukemia_test", "a1a","a2a","a3a","a7a","a8a","real-sim","madelon", "madelon_test", ,"rcv1.binary" ]
+datasets = ["leukemia", "leukemia_test", "a1a", "a2a", "a3a", "a7a",
+            "a8a", "real-sim", "madelon", "madelon_test", "rcv1.binary"]
 conditionings = [1e-6, 1e-7, 1e-8, 1e-9]
 
 for dataset in datasets:
