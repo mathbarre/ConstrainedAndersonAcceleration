@@ -6,6 +6,7 @@ from numpy.linalg import norm
 from scipy import sparse
 
 from CAA.logreg import solver_logreg
+from CAA.hinge import solver_hinge_smooth
 from libsvmdata import fetch_libsvm
 from CAA.utils.plot_utils import configure_plt, C_LIST
 from CAA.utils.utils import power_method
@@ -20,7 +21,7 @@ configure_plt()
 # X, y = fetch_libsvm("liver-disorders", normalize=False) # good
 # X, y = fetch_libsvm("phishing", normalize=False) # good
 
-X, y = fetch_libsvm("rcv1.binary", normalize=False) # good
+X, y = fetch_libsvm("a8a", normalize=False) # good
 
 
 tol = 1e-10
@@ -39,9 +40,9 @@ all_Es = {}
 all_Ts = {}
 
 
-fgap = 2_00
+fgap = 10_00
 #max_iter = 150_001
-max_iter = 20_001
+max_iter = 100_001
 verbose = True
 w = 0
 
@@ -64,7 +65,7 @@ for algo in all_algos:
     #     X, y, 1/C, rho=0.01, verbose=verbose,
     #     tol=tol, algo=algo_name, use_acc=use_acc, max_iter=max_iter, f_gap=fgap)
     w, E, T = solver_logreg(
-        X, y, rho=1e-9*L, verbose=verbose,
+        X, y, rho=1e-8*L, verbose=verbose,
         tol=tol, C0=C, adaptive_C=True, use_acc=use_acc, max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg)
     print("%s --- %s seconds ---" % (algo_name, time.time() - start_time))
     all_Es[algo] = E

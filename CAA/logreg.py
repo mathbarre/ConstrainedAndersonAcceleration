@@ -89,7 +89,7 @@ def solver_logreg(
 
     w = np.zeros(n_features)
     c = np.zeros(K)
-    c[0] = 1
+    c[0] = -1
     Xw = np.zeros(len(y))
     E = []
     T = []

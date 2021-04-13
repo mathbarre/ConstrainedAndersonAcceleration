@@ -16,8 +16,7 @@ from CAA.utils.utils import power_method
 # X, y = fetch_libsvm("liver-disorders", normalize=False) # good
 # X, y = fetch_libsvm("phishing", normalize=False) # good
 
-datasets = ["colon-cancer", "madelon", "madelon_test", "rcv1.binary",
-            "rcv1.binary_test", "real-sim", "leukemia", "leukemia_test"]
+datasets = ["leukemia", "leukemia_test", "a1a","a2a","a3a","a7a","a8a","real-sim","madelon", "madelon_test", ,"rcv1.binary" ]
 conditionings = [1e-6, 1e-7, 1e-8, 1e-9]
 
 for dataset in datasets:
@@ -46,7 +45,7 @@ for dataset in datasets:
 
         fgap = 500
         # max_iter = 150_001
-        max_iter = 1_000_001
+        max_iter = 2_000_001
         verbose = True
         n = int(np.floor(max_iter/fgap))+1
 
