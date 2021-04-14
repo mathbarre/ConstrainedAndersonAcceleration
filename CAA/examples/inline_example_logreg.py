@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
                 fgap = 500
                 # max_iter = 150_001
-                max_iter = 2_0_001
+                max_iter = 2_000_001
                 verbose = True
                 n = int(np.floor(max_iter/fgap))+1
 
