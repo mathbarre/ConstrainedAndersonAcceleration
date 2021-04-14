@@ -13,7 +13,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         dataset = sys.argv[1]
         try:
-            conditionings = [1e-6, 1e-7, 1e-8, 1e-9]
+            conditionings = [1e-7, 1e-8, 1e-9]
             X, y = fetch_libsvm(dataset, normalize=False)  # good
             is_sparse = sparse.issparse(X)
             if is_sparse:
