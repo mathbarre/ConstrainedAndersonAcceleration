@@ -10,8 +10,9 @@ from libsvmdata import fetch_libsvm
 from CAA.utils.utils import power_method
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
         dataset = sys.argv[1]
+        max_iter = int(sys.argv[2])
         try:
             conditionings = [1e-7, 1e-8, 1e-9]
             X, y = fetch_libsvm(dataset, normalize=False)  # good
@@ -39,7 +40,7 @@ if __name__ == '__main__':
 
                 fgap = 500
                 # max_iter = 150_001
-                max_iter = 2_000_001
+                max_iter = max_iter
                 verbose = True
                 n = int(np.floor(max_iter/fgap))+1
 
@@ -78,4 +79,4 @@ if __name__ == '__main__':
         except ValueError:
             print("dataset not known")
     else:
-        print("please enter a datasets name")
+        print("please enter a datasets name and a number of iterations")
