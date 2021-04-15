@@ -6,11 +6,12 @@ from numpy.linalg import norm
 from scipy import sparse
 
 from CAA.logreg import solver_logreg
+from CAA.logcosh import solver_logcosh
 from CAA.hinge import solver_hinge_smooth
 from libsvmdata import fetch_libsvm
 from CAA.utils.plot_utils import configure_plt, C_LIST
 from CAA.utils.utils import power_method
-
+from bcd4.data.synthetic import simu_linreg
 
 configure_plt()
 # data generation
@@ -21,13 +22,13 @@ configure_plt()
 # X, y = fetch_libsvm("liver-disorders", normalize=False) # good
 # X, y = fetch_libsvm("phishing", normalize=False) # good
 
-X, y = fetch_libsvm("a8a", normalize=False) # good
-
+Z, y = fetch_libsvm("rcv1.binary", normalize=False) # good
+# X, y = simu_linreg(n_samples=3000, n_features=2000, corr=0.999)
 
 tol = 1e-10
 
 all_algos = [
-    # ('gd', False, None, None, 1),
+    ('gd', False, None, None, 1),
     ('AA no reg', True, None, None, 1),
     ('CAA adapt', True, 10, None, 1),
     # ('AA reg 1e-7', True, None, 1e-7, 1),
@@ -40,17 +41,21 @@ all_Es = {}
 all_Ts = {}
 
 
-fgap = 10_00
+fgap = 1_0
 #max_iter = 150_001
-max_iter = 100_001
+max_iter = 2000_001
 verbose = True
 w = 0
 
+X = Z.toarray()
 is_sparse = sparse.issparse(X)
+
+
 if is_sparse:
-    L = power_method(X, max_iter=1000) ** 2 / 4
+    print("sparse")
+    L = power_method(X, max_iter=1000) ** 2/4
 else:
-    L = norm(X, ord=2) ** 2 / 4
+    L = norm(X, ord=2) ** 2/4
 #%%
 solver_logreg(
         X, y, rho=1e-12, C0=10, adaptive_C=True, use_acc=True, max_iter=100, f_grad=fgap, K=5)
@@ -66,7 +71,7 @@ for algo in all_algos:
     #     tol=tol, algo=algo_name, use_acc=use_acc, max_iter=max_iter, f_gap=fgap)
     w, E, T = solver_logreg(
         X, y, rho=1e-8*L, verbose=verbose,
-        tol=tol, C0=C, adaptive_C=True, use_acc=use_acc, max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg)
+        tol=tol, C0=C, adaptive_C=True, use_acc=use_acc, max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg, max_time = 20)
     print("%s --- %s seconds ---" % (algo_name, time.time() - start_time))
     all_Es[algo] = E
     all_Ts[algo] = T
@@ -85,7 +90,8 @@ for algo in all_algos:
     use_acc = algo[1]
     color = dict_color[algo_name]
     if use_acc:
-        marker = 'X'
+        # marker = 'X'
+        marker = None
     else:
         marker = None
     label = ' acc: %s' % (use_acc)

@@ -13,7 +13,7 @@ def sigmoid(x):
     return 1 / (1. + np.exp(- x))
 
 
-def solver_logreg(
+def solver_logcosh(
         X, y, rho=0, max_iter=10000, max_time=100, tol=1e-4, f_grad=10, K=5,
         use_acc=False, C0=None, adaptive_C=False, reg_amount=None,
         verbose=False):
@@ -83,9 +83,9 @@ def solver_logreg(
         R = np.zeros([n_features, K])
 
     if is_sparse:
-        L = power_method(X, max_iter=1000) ** 2 / 4 + rho
+        L = power_method(X, max_iter=1000) ** 2 + rho
     else:
-        L = norm(X, ord=2) ** 2 / 4 + rho
+        L = norm(X, ord=2) ** 2 + rho
 
     w = np.zeros(n_features)
     c = np.zeros(K)
@@ -93,14 +93,14 @@ def solver_logreg(
     Xw = np.zeros(len(y))
     E = []
     T = []
-    norm_0 = norm(X.T @ y / 2)
+    norm_0 = norm(X.T @ np.tanh(y))
     start_time = time.time()
     border = True
     C_prev = C0
     for it in range(max_iter):
         if time.time() - start_time > max_time:
             break
-        grad_w = -X.T @ (y / (1. + np.exp(y * Xw))) + rho*w
+        grad_w = X.T @ (np.tanh(Xw-y)) + rho*w
         if it % f_grad == 0:
             norm_grad = norm(grad_w)
             E.append(norm_grad)
@@ -138,7 +138,7 @@ def solver_logreg(
                         c = np.zeros(K)
                         c[-1] = 1
                         (c, gap, border) = FW(RTR, c, 1e-12*norm(R[:, 0]), C,
-                                              max_iter=5000, verbose=0)
+                                              max_iter=1000, verbose=0)
                         # x = cp.Variable(K)
                         # prob = cp.Problem(cp.Minimize(0.5*cp.quad_form(x, RTR)),
                         #                   [cp.norm1(x) <= C, cp.sum(x) == 1])
@@ -157,8 +157,7 @@ def solver_logreg(
                 w_acc = last_K_w[:, :-1] @ c
                 norm_grad = norm(grad_w)
                 Xw_acc = X @ w_acc
-                norm_grad_acc = norm(-X.T @ (y / (1. + np.exp(y * Xw_acc))) +
-                                     rho*w_acc)
+                norm_grad_acc = norm(X.T @ (np.tanh(Xw_acc-y)) + rho*w_acc)
                 if norm_grad_acc < norm_grad:
                     w = w_acc
                     Xw = Xw_acc
