@@ -58,7 +58,8 @@ if __name__ == '__main__':
                     w, E, T = solver_logreg(
                         X, y, rho=conditioning*L, verbose=False,
                         tol=tol, C0=C, adaptive_C=True, use_acc=use_acc,
-                        max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg)
+                        max_iter=max_iter*iters, f_grad=fgap, K=5,
+                        reg_amount=reg, max_time = 24*3600)
                     print("%s --- %s seconds ---" % (algo_name, time.time() -
                                                         start_time))
                     all_Es[algo] = np.hstack([np.array(E), np.zeros(n-len(E))])
