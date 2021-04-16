@@ -4,6 +4,7 @@ from scipy import sparse
 from CAA.utils.utils import power_method
 from numpy.linalg import norm
 from CAA.utils.FWsolver import FW, AFW
+from scipy.sparse.linalg import svds
 import time
 # import cvxpy as cp
 
@@ -83,7 +84,8 @@ def solver_logreg(
         R = np.zeros([n_features, K])
 
     if is_sparse:
-        L = power_method(X, max_iter=1000) ** 2 / 4 + rho
+        # L = power_method(X, max_iter=1000) ** 2 / 4 + rho
+        L = svds(X, k=1)[1][0] / 4
     else:
         L = norm(X, ord=2) ** 2 / 4 + rho
 
@@ -128,7 +130,7 @@ def solver_logreg(
                     C = C0
                     if adaptive_C:
                         # C *= (norm(grad_w)/norm_0/L)**(-1)
-                        C *= (norm(grad_w)/norm_0/L)**(-0.49)*it/K
+                        C *= (norm(grad_w)/L)**(-0.49)*it/K
                         C = max(C, C0)
                     try:
                         if not border:

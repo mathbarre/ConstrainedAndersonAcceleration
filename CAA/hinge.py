@@ -4,10 +4,6 @@ from scipy import sparse
 from CAA.utils.utils import power_method
 from numpy.linalg import norm
 from CAA.utils.FWsolver import FW, AFW
-<<<<<<< HEAD
-=======
-import cvxpy as cp
->>>>>>> ed2eba973ddd29e5c2f7933ab94aa332260d5cb2
 import time
 
 
