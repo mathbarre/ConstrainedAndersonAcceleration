@@ -15,7 +15,12 @@ if __name__ == '__main__':
         max_iter = int(sys.argv[2])
         fgap = int(sys.argv[3])
         try:
-            conditionings = [1e-7, 1e-8, 1e-9]
+            if len(sys.argv) < 4:
+                conditionings = [1e-7, 1e-8, 1e-9]
+            else:
+                conditionings = []
+                for i in range(4, len(sys.argv)):
+                    conditionings.append(float(sys.argv[i]))
             X, y = fetch_libsvm(dataset, normalize=False)  # good
             is_sparse = sparse.issparse(X)
             if is_sparse:
