@@ -22,7 +22,7 @@ configure_plt()
 # X, y = fetch_libsvm("liver-disorders", normalize=False) # good
 # X, y = fetch_libsvm("phishing", normalize=False) # good
 
-Z, y = fetch_libsvm("rcv1.binary", normalize=False) # good
+Z, y = fetch_libsvm("real-sim", normalize=False) # good
 # X, y = simu_linreg(n_samples=3000, n_features=2000, corr=0.999)
 
 tol = 1e-10
@@ -47,7 +47,8 @@ max_iter = 2000_001
 verbose = True
 w = 0
 
-X = Z.toarray()
+#X = Z.toarray()
+X = Z
 is_sparse = sparse.issparse(X)
 
 
@@ -58,7 +59,7 @@ else:
     L = norm(X, ord=2) ** 2/4
 #%%
 solver_logreg(
-        X, y, rho=1e-12, C0=10, adaptive_C=True, use_acc=True, max_iter=100, f_grad=fgap, K=5)
+        X, y, rho=1e-12, C0=10, adaptive_C=True, use_acc=True, max_iter=10, f_grad=fgap, K=5)
 for algo in all_algos:
     algo_name = algo[0]
     use_acc = algo[1]
@@ -70,8 +71,8 @@ for algo in all_algos:
     #     X, y, 1/C, rho=0.01, verbose=verbose,
     #     tol=tol, algo=algo_name, use_acc=use_acc, max_iter=max_iter, f_gap=fgap)
     w, E, T = solver_logreg(
-        X, y, rho=1e-8*L, verbose=verbose,
-        tol=tol, C0=C, adaptive_C=True, use_acc=use_acc, max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg, max_time = 20)
+        X, y, rho=1e-9*L, verbose=verbose,
+        tol=tol, C0=C, adaptive_C=True, use_acc=use_acc, max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg, max_time = 30)
     print("%s --- %s seconds ---" % (algo_name, time.time() - start_time))
     all_Es[algo] = E
     all_Ts[algo] = T

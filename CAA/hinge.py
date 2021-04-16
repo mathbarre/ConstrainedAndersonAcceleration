@@ -1,10 +1,9 @@
 import numpy as np
 from numba import njit
 from scipy import sparse
-from utils.utils import power_method
+from CAA.utils.utils import power_method
 from numpy.linalg import norm
-from utils.FWsolver import FW, AFW
-import cvxpy as cp
+from CAA.utils.FWsolver import FW, AFW
 import time
 
 
@@ -103,12 +102,14 @@ def solver_hinge_smooth(
 
     w = np.zeros(n_features)
     c = np.zeros(K)
-    c[0] = 1
+    c[-1] = 1
     Xw = np.zeros(len(y))
     E = []
     T = []
     norm_0 = norm(X.T @ y)
     start_time = time.time()
+    border = True
+    C_prev = C0
     for it in range(max_iter):
         grad_w = X.T @ (y * grad_smoothed_hinge_VEC(y * Xw)) + rho*w
         if it % f_grad == 0:
@@ -138,13 +139,17 @@ def solver_hinge_smooth(
                     C = C0
                     if adaptive_C:
                         # C *= (norm(grad_w)/norm_0/L)**(-1)
-                        C *= (norm(grad_w)/norm_0/L)**(-1)
+                        C *= (norm(grad_w)/norm_0/L)**(-0.49)*it/K
                         C = max(C, C0)
                     try:
+                        if not border:
+                            C = C_prev
+                        else:
+                            C_prev = C
                         c = np.zeros(K)
                         c[-1] = 1
-                        (c, gap) = FW(RTR, c, 1e-8*norm(L*R[:, 0]), C,
-                                      max_iter=30000, verbose=0)
+                        (c, gap, border) = FW(RTR, c, 1e-12*norm(R[:, 0]), C,
+                                              max_iter=20000, verbose=0)
                         # x = cp.Variable(K)
                         # prob = cp.Problem(cp.Minimize(0.5*cp.quad_form(x, RTR)),
                         #                   [cp.norm1(x) <= C0, cp.sum(x) == 1])
