@@ -56,7 +56,7 @@ print("Lipschitz constant computation started")
 
 if is_sparse:
     print("sparse")
-    L = svds(X, k=1)[1][0] / 4
+    L = svds(X, k=1)[1][0] ** 2 / 4
     # L = power_method(X, max_iter=100) ** 2/4
 else:
     L = norm(X, ord=2) ** 2/4

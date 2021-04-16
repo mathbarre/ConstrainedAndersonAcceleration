@@ -85,7 +85,7 @@ def solver_logreg(
 
     if is_sparse:
         # L = power_method(X, max_iter=1000) ** 2 / 4 + rho
-        L = svds(X, k=1)[1][0] / 4
+        L = svds(X, k=1)[1][0]**2 / 4
     else:
         L = norm(X, ord=2) ** 2 / 4 + rho
 
