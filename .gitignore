@@ -1,0 +1,5 @@
+.DS_Store
+CAA.egg-info/*
+CAA/__pycache__/*
+CAA/utils/__pycache__/*
+CAA/examples/results/*
