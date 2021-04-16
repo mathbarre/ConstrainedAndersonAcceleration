@@ -4,7 +4,7 @@ import time
 import numpy as np
 from numpy.linalg import norm
 from scipy import sparse
-
+from scipy.sparse.linalg import svds
 from CAA.logreg import solver_logreg
 from libsvmdata import fetch_libsvm
 from CAA.utils.utils import power_method
@@ -25,9 +25,10 @@ if __name__ == '__main__':
             X, y = fetch_libsvm(dataset, normalize=False)  # good
             #is_sparse = sparse.issparse(X)
             if is_sparse:
-                L = power_method(X, max_iter=1000) ** 2 / 4
+                L = svds(X, k=1)[1][0] ** 2 / 4
             else:
                 L = norm(X, ord=2) ** 2 / 4
+                X = X.toarray()
             for conditioning in conditionings:
                 print(conditioning)
                 tol = 1e-10
