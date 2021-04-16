@@ -22,7 +22,7 @@ configure_plt()
 # X, y = fetch_libsvm("liver-disorders", normalize=False) # good
 # X, y = fetch_libsvm("phishing", normalize=False) # good
 
-Z, y = fetch_libsvm("rcv1.binary", normalize=False) # good
+Z, y = fetch_libsvm("madelon", normalize=False) # good
 # X, y = simu_linreg(n_samples=3000, n_features=2000, corr=0.999)
 
 tol = 1e-10
@@ -47,8 +47,8 @@ max_iter = 2000_001
 verbose = True
 w = 0
 
-# X = Z.toarray()
-X = Z
+X = Z.toarray()
+#X = Z
 is_sparse = sparse.issparse(X)
 
 

@@ -10,19 +10,20 @@ from libsvmdata import fetch_libsvm
 from CAA.utils.utils import power_method
 
 if __name__ == '__main__':
-    if len(sys.argv) > 3:
+    if len(sys.argv) > 5:
         dataset = sys.argv[1]
         max_iter = int(sys.argv[2])
         fgap = int(sys.argv[3])
+        is_sparse = bool(sys.argv[4])
         try:
-            if len(sys.argv) < 4:
+            if len(sys.argv) < 5:
                 conditionings = [1e-7, 1e-8, 1e-9]
             else:
                 conditionings = []
-                for i in range(4, len(sys.argv)):
+                for i in range(5, len(sys.argv)):
                     conditionings.append(float(sys.argv[i]))
             X, y = fetch_libsvm(dataset, normalize=False)  # good
-            is_sparse = sparse.issparse(X)
+            #is_sparse = sparse.issparse(X)
             if is_sparse:
                 L = power_method(X, max_iter=1000) ** 2 / 4
             else:
