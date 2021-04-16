@@ -85,7 +85,7 @@ def solver_logreg(
 
     if is_sparse:
         # L = power_method(X, max_iter=1000) ** 2 / 4 + rho
-        L = svds(X, k=1)[1][0]**2 / 4
+        L = svds(X, k=1)[1][0]**2 / 4 + rho
     else:
         L = norm(X, ord=2) ** 2 / 4 + rho
 
@@ -120,6 +120,7 @@ def solver_logreg(
         if use_acc:
             last_K_w[:, it % (K + 1)] = w
             if it % (K + 1) == K:
+                norm_grad = norm(grad_w)
                 for k in range(K):
                     R[:, k] = last_K_w[:, k + 1] - last_K_w[:, k]
 
@@ -130,7 +131,7 @@ def solver_logreg(
                     C = C0
                     if adaptive_C:
                         # C *= (norm(grad_w)/norm_0/L)**(-1)
-                        C *= (norm(grad_w)/L)**(-0.49)*it/K
+                        C *= (norm_grad/L)**(-0.49)*it/K
                         C = max(C, C0)
                     try:
                         if not border:
@@ -157,7 +158,6 @@ def solver_logreg(
                         if verbose:
                             print("----------Linalg error")
                 w_acc = last_K_w[:, :-1] @ c
-                norm_grad = norm(grad_w)
                 Xw_acc = X @ w_acc
                 norm_grad_acc = norm(-X.T @ (y / (1. + np.exp(y * Xw_acc))) +
                                      rho*w_acc)
