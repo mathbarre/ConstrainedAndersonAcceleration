@@ -1,9 +1,9 @@
 import numpy as np
 from numba import njit
 from scipy import sparse
-from utils.utils import power_method
+from CAA.utils.utils import power_method
 from numpy.linalg import norm
-from utils.FWsolver import FW, AFW
+from CAA.utils.FWsolver import FW, AFW
 import cvxpy as cp
 import time
 
