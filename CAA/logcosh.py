@@ -128,7 +128,7 @@ def solver_logcosh(
                     C = C0
                     if adaptive_C:
                         # C *= (norm(grad_w)/norm_0/L)**(-1)
-                        C *= (norm(grad_w)/norm_0/L)**(-0.49)*it/K
+                        C *= (norm(grad_w)/L)**(-0.49)*it/K
                         C = max(C, C0)
                     try:
                         if not border:
@@ -138,7 +138,7 @@ def solver_logcosh(
                         c = np.zeros(K)
                         c[-1] = 1
                         (c, gap, border) = FW(RTR, c, 1e-12*norm(R[:, 0]), C,
-                                              max_iter=1000, verbose=0)
+                                              max_iter=5000, verbose=0)
                         # x = cp.Variable(K)
                         # prob = cp.Problem(cp.Minimize(0.5*cp.quad_form(x, RTR)),
                         #                   [cp.norm1(x) <= C, cp.sum(x) == 1])

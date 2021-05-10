@@ -130,7 +130,7 @@ def solver_logreg(
                 if C0 is not None:
                     C = C0
                     if adaptive_C:
-                        # C *= (norm(grad_w)/norm_0/L)**(-1)
+                        # C *= (norm(grad_w)/L)**(-2)
                         C *= (norm_grad/L)**(-0.49)*it/K
                         C = max(C, C0)
                     try:

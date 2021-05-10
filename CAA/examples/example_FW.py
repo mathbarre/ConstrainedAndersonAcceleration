@@ -41,7 +41,7 @@ all_Es = {}
 all_Ts = {}
 
 
-fgap = 1_00
+fgap = 1_0
 #max_iter = 150_001
 max_iter = 2000_001
 verbose = True
@@ -75,7 +75,7 @@ for algo in all_algos:
     #     tol=tol, algo=algo_name, use_acc=use_acc, max_iter=max_iter, f_gap=fgap)
     w, E, T = solver_logreg(
         X, y, rho=1e-8*L, verbose=verbose,
-        tol=tol, C0=C, adaptive_C=True, use_acc=use_acc, max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg, max_time = 20)
+        tol=tol, C0=C, adaptive_C=True, use_acc=use_acc, max_iter=max_iter*iters, f_grad=fgap, K=5, reg_amount=reg, max_time=20)
     print("%s --- %s seconds ---" % (algo_name, time.time() - start_time))
     all_Es[algo] = E
     all_Ts[algo] = T
