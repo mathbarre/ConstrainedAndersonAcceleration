@@ -1,4 +1,4 @@
-# ConstrainedAndersonAcceleration
+# Convergence of Constrained Anderson Acceleration
 
 Implementation of the Constrained Anderson Acceleration (CAA) method from ['reference'](https://arxiv.org/abs/2010.15482)
 
