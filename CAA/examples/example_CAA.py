@@ -11,9 +11,12 @@ from libsvmdata import fetch_libsvm
 configure_plt()
 # data generation
 
+dataset = "madelon"
+# dataset = "rcv1.binary"
 
-# Z, y = fetch_libsvm("rcv1.binary", normalize=False)
-Z, y = fetch_libsvm("madelon", normalize=False)
+Z, y = fetch_libsvm(dataset, normalize=False)
+X = Z.toarray()  # madelon is not sparse
+# X = Z  # rcv1 is sparse
 
 all_algos = [
     ('GD', False, None, None, 1),
@@ -30,12 +33,8 @@ max_iter = 50_001  # maximal number of outter iterations
 verbose = True
 max_time = 15  # maximal running time for the methods
 
-X = Z.toarray()
 
 is_sparse = sparse.issparse(X)
-
-
-print("Lipschitz constant computation started")
 
 if is_sparse:
     print("sparse")
@@ -48,8 +47,9 @@ else:
 mu = 1e-8 * L  # amount of l_2 regularization
 
 
-print("Lipschitz constant computation done")
-print(L)
+print("Lipschitz constant computation done L=%e" % (L))
+
+
 for algo in all_algos:
     algo_name = algo[0]
     use_acc = algo[1]
@@ -57,6 +57,7 @@ for algo in all_algos:
     reg = algo[3]
     iters = algo[4]
     start_time = time.time()
+    print("Starting %s" % (algo_name))
     w, E, T = solver_logreg(
         X, y, rho=mu, verbose=verbose,
         tol=tol, C0=C, adaptive_C=True, use_acc=use_acc,
@@ -112,14 +113,3 @@ plt.xlabel("Time (s)")
 plt.tight_layout()
 plt.legend()
 plt.show()
-
-# res = np.array([])
-# for algo in all_algos:
-#     res = np.hstack([res,all_Es[algo]])
-
-# res = res.reshape((8,-1))
-# for algo in all_algos:
-#     res = np.vstack([res, all_Ts[algo]])
-# res = np.vstack([res,fgap * np.arange(res.shape[1])])
-
-# np.savetxt("logreg_C0_10_madelon-test_rho_1e-12.txt",res.T)
