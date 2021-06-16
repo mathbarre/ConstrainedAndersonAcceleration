@@ -2,7 +2,7 @@
 
 Implementation of the Constrained Anderson Acceleration (CAA) method from ['reference'](https://arxiv.org/abs/2010.15482)
 
-#### Authors
+### Authors
 
 - [**Mathieu Barré**](https://mathbarre.github.io/)
 - [**Adrien Taylor**](https://www.di.ens.fr/~ataylor/)
