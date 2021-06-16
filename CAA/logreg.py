@@ -1,12 +1,13 @@
+# This implementation is mainly based on
+# the code from https://github.com/mathurinm/andersoncd
+
 import numpy as np
 from numba import njit
 from scipy import sparse
-from CAA.utils.utils import power_method
 from numpy.linalg import norm
-from CAA.utils.FWsolver import FW, AFW
+from CAA.utils.FWsolver import FW
 from scipy.sparse.linalg import svds
 import time
-# import cvxpy as cp
 
 
 @njit
@@ -70,7 +71,7 @@ def solver_logreg(
         Gradient norms every grad_freq iterations.
 
     T : ndarray
-        Time every grad_freq iterations   
+        Time every grad_freq iterations
     """
 
     is_sparse = sparse.issparse(X)
@@ -84,7 +85,6 @@ def solver_logreg(
         R = np.zeros([n_features, K])
 
     if is_sparse:
-        # L = power_method(X, max_iter=1000) ** 2 / 4 + rho
         L = svds(X, k=1)[1][0]**2 / 4 + rho
     else:
         L = norm(X, ord=2) ** 2 / 4 + rho
@@ -95,7 +95,6 @@ def solver_logreg(
     Xw = np.zeros(len(y))
     E = []
     T = []
-    norm_0 = norm(X.T @ y / 2)
     start_time = time.time()
     border = True
     C_prev = C0
@@ -142,11 +141,6 @@ def solver_logreg(
                         c[-1] = 1
                         (c, gap, border) = FW(RTR, c, 1e-12*norm(R[:, 0]), C,
                                               max_iter=5000, verbose=0)
-                        # x = cp.Variable(K)
-                        # prob = cp.Problem(cp.Minimize(0.5*cp.quad_form(x, RTR)),
-                        #                   [cp.norm1(x) <= C, cp.sum(x) == 1])
-                        # prob.solve(solver='MOSEK')
-                        # c = x.value
                     except np.linalg.LinAlgError:
                         if verbose:
                             print("----------FW error")
