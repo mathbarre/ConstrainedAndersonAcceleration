@@ -1,6 +1,6 @@
-# Convergence of Constrained Anderson Acceleration
+# Convergence of Constrained Vector Extrapolation
 
-Implementation of the Constrained Anderson Acceleration (CAA) method from ['reference'](https://arxiv.org/abs/2010.15482)
+Implementation of the Constrained Vector Extrapolation (or Constrainied Anderson Acceleration) method from ['reference'](https://arxiv.org/abs/2010.15482)
 
 ### Authors
 
